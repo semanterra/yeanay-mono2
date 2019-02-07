@@ -1,0 +1,12 @@
+language: node_js
+node_js:
+  - "lts/*"
+env:
+  - YEANAY_TEST_DB="host=localhost port=5432 user=postgres dbname=yeanay_test"
+script: "npm run prepublishOnly"
+#services:
+#  - postgresql
+addons:
+  postgresql: "9.6"
+before_script:
+  - psql -c 'create database yeanay_test;' -U postgres

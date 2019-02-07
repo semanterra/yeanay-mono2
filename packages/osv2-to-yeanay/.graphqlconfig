@@ -1,0 +1,17 @@
+{
+  "projects": {
+    "osv2-to-yeanay": {
+      "schemaPath": "src/gql/schema/schema.graphql",
+      "extensions": {
+        "endpoints": {
+          "openstates": {
+            "url": "https://openstates.org/graphql",
+            "headers": {
+              "X-API-KEY": "${env:YN_OS_API_KEY}"
+            }
+          }
+        }
+      }
+    }
+  }
+}

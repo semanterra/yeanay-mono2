@@ -1,0 +1,30 @@
+{
+    "name": "@yeanay/osv2-to-yeanay",
+    "version": "0.1.7",
+    "scripts": {
+        "build": "tsc",
+        "clean": "rm -rf lib coverage",
+        "lint": "tslint --project . --format verbose",
+        "prepublishOnly": "npm run clean && npm run build && npm run lint && npm run test",
+        "test": "jest --coverage",
+        "debug-jest": "node --inspect-brk node_modules/.bin/jest --runInBand"
+    },
+    "private": true,
+    "jest": {
+        "transform": {
+            "^.+\\.tsx?$": "ts-jest"
+        },
+        "testRegex": "(/.*\\.(test|spec))\\.(ts|tsx)$",
+        "moduleFileExtensions": [
+            "ts",
+            "tsx",
+            "js",
+            "json"
+        ]
+    },
+    "dependencies": {
+        "@yeanay/yeanay-commons": "*",
+        "@yeanay/yeanay-daoist": "*",
+        "apollo-fetch": "^0.7.0"
+    }
+}

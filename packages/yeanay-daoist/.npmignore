@@ -1,0 +1,15 @@
+# Same as gitignore
+/lib/
+/.idea/
+/node_modules/
+/coverage/
+
+# npmignore only
+/base/
+/doc/
+**/*.test.*
+**/__test__/
+.travis.yml
+*.json
+*.iml
+**/*.junk

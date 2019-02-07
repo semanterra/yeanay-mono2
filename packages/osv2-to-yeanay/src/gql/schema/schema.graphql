@@ -1,0 +1,359 @@
+# source: http://alpha.openstates.org/graphql
+# timestamp: Thu Dec 06 2018 07:06:34 GMT-0500 (EST)
+
+type BillAbstractNode {
+  abstract: String
+  note: String
+  date: String
+}
+
+type BillActionNode {
+  organization: OrganizationNode
+  description: String
+  date: String
+  classification: [String]
+  order: Int
+  extras: String
+  vote: VoteEventNode
+  relatedEntities: [RelatedEntityNode]
+}
+
+type BillConnection {
+  pageInfo: PageInfo!
+  edges: [BillEdge]!
+  totalCount: Int
+}
+
+type BillDocumentNode {
+  note: String
+  date: String
+  links: [MimetypeLinkNode]
+}
+
+type BillEdge {
+  """The item at the end of the edge"""
+  node: BillNode
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
+
+type BillIdentifierNode {
+  identifier: String
+  scheme: String
+  note: String
+}
+
+type BillNode {
+  id: String
+  createdAt: String
+  updatedAt: String
+  extras: String
+  legislativeSession: LegislativeSessionNode
+  identifier: String
+  title: String
+  fromOrganization: OrganizationNode
+  classification: [String]
+  subject: [String]
+  abstracts: [BillAbstractNode]
+  otherTitles: [BillTitleNode]
+  otherIdentifiers: [BillIdentifierNode]
+  actions: [BillActionNode]
+  sponsorships: [BillSponsorshipNode]
+  relatedBills: [RelatedBillNode]
+  documents: [BillDocumentNode]
+  versions: [BillDocumentNode]
+  sources: [LinkNode]
+  votes(before: String, after: String, first: Int, last: Int): VoteConnection
+  openstatesUrl: String
+}
+
+type BillSponsorshipNode {
+  name: String
+  entityType: String
+  organization: OrganizationNode
+  person: PersonNode
+  primary: Boolean
+  classification: String
+}
+
+type BillTitleNode {
+  title: String
+  note: String
+}
+
+type BillVoteNode {
+  option: String
+  note: String
+  voteEvent: VoteEventNode
+}
+
+type ContactDetailNode {
+  type: String
+  value: String
+  note: String
+  label: String
+}
+
+type DivisionNode {
+  id: String
+  createdAt: String
+  updatedAt: String
+  extras: String
+  name: String
+  redirect: DivisionNode
+  country: String
+}
+
+type IdentifierNode {
+  identifier: String
+  scheme: String
+}
+
+type JurisdictionConnection {
+  pageInfo: PageInfo!
+  edges: [JurisdictionEdge]!
+}
+
+type JurisdictionEdge {
+  """The item at the end of the edge"""
+  node: JurisdictionNode
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
+
+type JurisdictionNode {
+  id: String
+  name: String
+  url: String
+  featureFlags: [String]
+  legislativeSessions(before: String, after: String, first: Int, last: Int): LegislativeSessionConnection
+  organizations(classification: [String], before: String, after: String, first: Int, last: Int): OrganizationConnection
+}
+
+type LegislativeSessionConnection {
+  pageInfo: PageInfo!
+  edges: [LegislativeSessionEdge]!
+}
+
+type LegislativeSessionEdge {
+  """The item at the end of the edge"""
+  node: LegislativeSessionNode
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
+
+type LegislativeSessionNode {
+  jurisdiction: JurisdictionNode
+  identifier: String
+  name: String
+  classification: String
+  startDate: String
+  endDate: String
+}
+
+type LinkNode {
+  note: String
+  url: String
+}
+
+type MembershipNode {
+  id: String
+  createdAt: String
+  updatedAt: String
+  extras: String
+  organization: OrganizationNode
+  person: PersonNode
+  personName: String
+  post: PostNode
+  label: String
+  role: String
+  startDate: String
+  endDate: String
+}
+
+type MimetypeLinkNode {
+  mediaType: String
+  url: String
+  text: String
+}
+
+type NameNode {
+  name: String
+  note: String
+  startDate: String
+  endDate: String
+}
+
+type OrganizationConnection {
+  pageInfo: PageInfo!
+  edges: [OrganizationEdge]!
+  totalCount: Int
+}
+
+type OrganizationEdge {
+  """The item at the end of the edge"""
+  node: OrganizationNode
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
+
+type OrganizationNode {
+  id: String
+  createdAt: String
+  updatedAt: String
+  extras: String
+  name: String
+  image: String
+  classification: String
+  foundingDate: String
+  dissolutionDate: String
+  parent: OrganizationNode
+  children(classification: String, before: String, after: String, first: Int, last: Int): OrganizationConnection
+  currentMemberships: [MembershipNode]
+  identifiers: [IdentifierNode]
+  otherNames: [NameNode]
+  links: [LinkNode]
+  sources: [LinkNode]
+}
+
+type PageInfo {
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+}
+
+type PersonConnection {
+  pageInfo: PageInfo!
+  edges: [PersonEdge]!
+  totalCount: Int
+}
+
+type PersonEdge {
+  """The item at the end of the edge"""
+  node: PersonNode
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
+
+type PersonNode {
+  id: String
+  createdAt: String
+  updatedAt: String
+  extras: String
+  name: String
+  sortName: String
+  familyName: String
+  givenName: String
+  image: String
+  birthDate: String
+  deathDate: String
+  identifiers: [IdentifierNode]
+  otherNames: [NameNode]
+  links: [LinkNode]
+  sources: [LinkNode]
+  contactDetails: [ContactDetailNode]
+  currentMemberships(classification: [String]): [MembershipNode]
+  oldMemberships(classification: [String]): [MembershipNode]
+  votes: [BillVoteNode]
+}
+
+type PersonVoteNode {
+  option: String
+  voterName: String
+  voter: PersonNode
+  note: String
+}
+
+type PostNode {
+  id: String
+  createdAt: String
+  updatedAt: String
+  extras: String
+  label: String
+  role: String
+  division: DivisionNode
+  startDate: String
+  endDate: String
+  maximumMemberships: String
+}
+
+type Query {
+  jurisdictions(before: String, after: String, first: Int, last: Int): JurisdictionConnection
+  jurisdiction(id: String, name: String): JurisdictionNode
+  people(memberOf: String, everMemberOf: String, district: String, name: String, updatedSince: String, latitude: Float, longitude: Float, before: String, after: String, first: Int, last: Int): PersonConnection
+  person(id: ID): PersonNode
+  organization(id: ID): OrganizationNode
+  bill(id: String, jurisdiction: String, session: String, identifier: String): BillNode
+  bills(jurisdiction: String, session: String, chamber: String, updatedSince: String, subject: String, sponsor: SponsorInput, classification: String, actionSince: String, before: String, after: String, first: Int, last: Int): BillConnection
+}
+
+type RelatedBillNode {
+  identifier: String
+  legislativeSession: String
+  relationType: String
+  relatedBill: BillNode
+}
+
+type RelatedEntityNode {
+  name: String
+  entityType: String
+  organization: OrganizationNode
+  person: PersonNode
+}
+
+input SponsorInput {
+  name: String
+  primary: Boolean
+  person: String
+}
+
+type VoteConnection {
+  pageInfo: PageInfo!
+  edges: [VoteEdge]!
+}
+
+type VoteCountNode {
+  option: String
+  value: Int
+}
+
+type VoteEdge {
+  """The item at the end of the edge"""
+  node: VoteEventNode
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
+
+type VoteEventNode {
+  id: String
+  createdAt: String
+  updatedAt: String
+  extras: String
+  identifier: String
+  motionText: String
+  motionClassification: [String]
+  startDate: String
+  endDate: String
+  result: String
+  organization: OrganizationNode
+  billAction: BillActionNode
+  legislativeSession: LegislativeSessionNode
+  bill: BillNode
+  votes: [PersonVoteNode]
+  counts: [VoteCountNode]
+  sources: [LinkNode]
+}

@@ -1,0 +1,21 @@
+query jurisdictionQuery($ocd_state_id: String!) {
+    jurisdiction(id: $ocd_state_id) {
+        name
+        id
+        name
+        url
+        featureFlags
+
+        legislativeSessions {
+            edges {
+                node {
+                    name
+                    startDate
+                    endDate
+                    classification
+                    identifier
+                }
+            }
+        }
+    }
+}

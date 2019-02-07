@@ -1,0 +1,21 @@
+{
+    "knexConnect": {
+        "host": "localhost",
+        "port": 5432,
+        "database": "yeanay1",
+        "user": "yeanay1",
+        "password": "yeanay1"
+    },
+    "testConnect": {
+        "host": "localhost",
+        "port": 5432,
+        "database": "yeanay1",
+        "user": "yeanay1",
+        "password": "yeanay1"
+    },
+    "testUserSchema": "test_user1",
+
+    "postgresUrl": "postgresql:localhost:5432/yeanay1",
+
+    "userSchema": "user1"
+}

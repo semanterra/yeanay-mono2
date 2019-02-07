@@ -1,0 +1,26 @@
+query jurisdictionsQuery {
+    jurisdictions {
+        edges {
+            node {
+                id
+                name
+                url
+                featureFlags
+
+                legislativeSessions {
+                    edges {
+                        node {
+                            name
+                            startDate
+                            endDate
+                            classification
+                            identifier
+                        }
+                    }
+                }
+
+                #organizations omitted - they need to be paged
+            }
+        }
+    }
+}

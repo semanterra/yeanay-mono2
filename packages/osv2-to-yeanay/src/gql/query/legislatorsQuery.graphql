@@ -1,0 +1,50 @@
+query legiQuery( $ocd_org_id: String!, $since: String, $after: String,) {
+    people(first: 100, everMemberOf: $ocd_org_id, after:$after, updatedSince: $since) {
+        edges {
+            cursor
+            node {
+                name
+                updatedAt
+                id
+                sortName
+                familyName
+                givenName
+                image
+                identifiers {identifier}
+                otherNames {name note startDate endDate}
+                contactDetails { note type value }
+                currentMemberships(classification: ["upper", "lower", "legislature", "party"]) {
+                    organization { id name classification }
+                    updatedAt
+                    startDate
+                    endDate
+
+                    post {
+                        id
+                        updatedAt
+                        label
+                        role
+                        division { id updatedAt name }
+                    }
+                }
+                oldMemberships(classification: ["upper", "lower", "legislature", "party"]) {
+                    organization { id name classification }
+                    updatedAt
+                    startDate
+                    endDate
+
+                    post {
+                        id
+                        updatedAt
+                        label
+                        role
+                        division { id updatedAt name }
+                    }
+                }
+
+            }
+            cursor
+        }
+    }
+
+}

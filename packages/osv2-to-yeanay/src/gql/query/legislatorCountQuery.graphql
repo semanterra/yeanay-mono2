@@ -1,0 +1,12 @@
+query legiQuery( $ocd_org_id: String!, $since: String, $after: String,) {
+    people(first: 100, memberOf: $ocd_org_id, after:$after, updatedSince: $since) {
+        edges {
+            cursor
+            node {
+                id
+            }
+            cursor
+        }
+    }
+
+}

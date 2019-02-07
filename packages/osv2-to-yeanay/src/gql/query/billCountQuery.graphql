@@ -1,0 +1,10 @@
+query billCountQuery($stateName: String!, $since: String, $after: String) {
+    bills(first: 100, jurisdiction: $stateName, after: $after, updatedSince: $since) {
+        edges {
+            cursor
+            node {
+                id
+            }
+        }
+    }
+}

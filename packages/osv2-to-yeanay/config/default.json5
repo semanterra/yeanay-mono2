@@ -1,0 +1,22 @@
+// See custom-environment-variables.json5 in this dir for environment vars
+
+{
+    // knex config.  See https://knexjs.org/#Installation-client.
+    dbConnectionConfig: {
+        client: 'pg',
+        debug: false,
+        asyncStackTraces: true,
+        connection: {
+            host: '127.0.0.1',
+            port: 5432,
+//            user: 'postgres',
+//            password: 'swordfish'
+            database: 'yeanay_test'
+        }
+    },
+    n3Schema: 'n3',
+    qualitySchema: 'quality'  ,
+    rawSchema: 'raw',
+//    osApiKey: ''
+    since: '2018-01-01'
+}

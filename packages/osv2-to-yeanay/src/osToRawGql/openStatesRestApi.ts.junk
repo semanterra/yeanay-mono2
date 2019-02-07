@@ -1,0 +1,177 @@
+import axios, { AxiosInstance, AxiosResponse } from 'axios'
+import * as _ from 'lodash'
+import * as querystring from 'querystring'
+import * as osty from '@yeanay/yeanay-commons'
+import { fThrottle } from '../generic/throttler'
+import VError = require('verror')
+
+
+const openStatesUrlPrefix = 'http://openStates.org/api/v1/'
+
+// Only 600ms here because we're only getting districts.  There are <7000 of them
+const openStatesMinRequestTimeMs = 600
+const initialBackoff = 2000
+
+const throttle = fThrottle(openStatesMinRequestTimeMs)
+
+export type IOpenStatesMetadata = any
+
+export type IOpenStatesGovState = any // todo
+export type IOpenStatesDetailBill = any // todo
+export type IOpenStatesSearchBill = any // todo
+
+export type IOpenStatesDetailLegi = any // todo
+export type IOpenStatesSearchLegi = any // todo
+
+export type IOpenStatesDistrict = any
+
+function delay(ms: number) {
+    return new Promise(function (resolve, reject) {
+        setTimeout(resolve, ms); // (A)
+    });
+}
+
+
+export class OpenStatesRestApi {
+    private apikey: string
+    private slowAxios: AxiosInstance
+
+    constructor(apikey = defaultApikey) {
+        this.apikey = apikey
+
+        this.slowAxios = axios.create({timeout: 10000})
+    }
+
+    public async getMetaOverviewP(): Promise<AxiosResponse<IOpenStatesMetadata>> {
+        try {
+            return await this.getP('metadata')
+        } catch (e) {
+            throw new VError(e, 'OS getMetaOverviewP')
+        }
+    }
+
+    public async getStateMetaP(state: osty.StateId): Promise<AxiosResponse<IOpenStatesGovState>> {
+        try {
+            return await this.getP(`metadata/${state}`)
+        } catch (e) {
+            throw new VError(e, `OS getStateMetaP(${state})`)
+        }
+    }
+
+    public async searchBillsP(state: osty.StateId, term: osty.TermId,
+                              since?: Date): Promise<IOpenStatesSearchBill> {
+        const per_page = 200
+        try {
+            const params: any = {
+                state,
+                search_window: `term:${term}`,
+                per_page
+            }
+            if (since) {
+                params.updated_since = since.toISOString().substring(0, 10)
+            }
+            let maybeMore = true
+            let pageNumber = 0
+            let ret:any[] = []
+            while (maybeMore) {
+                pageNumber += 1
+                params.page = pageNumber
+                const pageData = (await this.getP('bills', params)).data
+                ret.push(...pageData)
+                maybeMore = pageData.length === per_page
+            }
+            return ret
+        } catch (e) {
+            throw new VError(e, `OS searchBillsP(${state}, ${term}, ${since}`)
+        }
+
+    }
+
+    public async getBillDetailP(billId: osty.BillId): Promise<AxiosResponse<IOpenStatesDetailBill>> {
+        try {
+            return await this.getP(`bills/${billId}`)
+        } catch (e) {
+            throw new VError(e, `OS getBillDetailP(${billId})`)
+        }
+    }
+
+    public async searchLegsP(state: osty.StateId,
+                             term: osty.TermId): Promise<AxiosResponse<IOpenStatesSearchLegi>> {
+        const params: any = {
+            state,
+            term: `${term}`,
+        }
+        try {
+            return await this.getP('legislators', params)
+        } catch (e) {
+            throw new VError(e, `OS searchLegsP(${state}, ${term})`)
+        }
+    }
+
+    public async getLegiDetailP(legId: string): Promise<AxiosResponse<IOpenStatesDetailLegi>> {
+        try {
+            return await this.getP(`legislators/${legId}`)
+        } catch (e) {
+            throw new VError(e, `OS getLegiDetailP(${legId})`)
+        }
+    }
+
+
+    public async getDistrictsP(state: string): Promise<AxiosResponse<any>> {
+        try {
+            return await this.getP(`districts/${state}/`)
+        } catch (e) {
+            throw new VError(e, 'OS getDistrictsP')
+        }
+    }
+
+    public async getDistrictBoundsP(boundaryId: string): Promise<AxiosResponse<any>> {
+        try {
+            return await this.getP(`districts/boundary/${boundaryId}/`)
+        } catch (e) {
+            throw new VError(e, 'OS getDistrictBoundsP')
+        }
+    }
+
+    /**
+     * Common base for all REST queries.  Throttles requests to avoid hammering OS server.
+     * @param urlSuffix
+     * @param params
+     * @returns {any}
+     */
+
+    private async getP(urlSuffix: string, params = {}): Promise<AxiosResponse<any>> {
+        const maxRetries = 4  // including first try
+        const backoffMultiplier = 2
+
+        const q = querystring.stringify(_.assign({}, params, {apikey: this.apikey}))
+        const url = `${openStatesUrlPrefix}${urlSuffix}?${q}`
+
+        let retries = 0
+        let backoff = initialBackoff
+        let error
+
+        while ( retries < maxRetries ) {
+            backoff *= backoffMultiplier
+            try {
+                const ret = await throttle(
+                    () => {
+                        console.log(new Date().toTimeString() + '  getP: ' + url)
+                        return this.slowAxios({ method: 'get', url })
+                    }
+                )
+                if ( retries > 0 ) {
+                    console.log(`retry ${retries} succeeded`)
+                }
+                return ret
+            } catch (e) { // retry
+                console.log('retrying: ' + e.toString())
+                retries += 1
+                await delay(backoff)
+                error = e
+            }
+        }
+        throw error
+    }
+
+}

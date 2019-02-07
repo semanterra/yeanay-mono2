@@ -1,0 +1,18 @@
+query organizationQuery($ocd_state_id: String!, $after: String) {
+    jurisdiction(id: $ocd_state_id) {
+        id
+        organizations( first: 100, after: $after) {
+            edges {
+                node {
+                    id
+                    name
+                    parent {id}
+                    classification
+                    image
+                    links {note url}
+                }
+                cursor
+            }
+        }
+    }
+}

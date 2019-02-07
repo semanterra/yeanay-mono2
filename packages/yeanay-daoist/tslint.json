@@ -1,0 +1,11 @@
+/**
+  * These rule settings are a broad, general recommendation for a good default
+  * configuration, but should be tuned for personal or team preferences if needed.
+  */
+
+{
+    "extends": "../../base/tslint.base.json",
+    "rulesDirectory": [
+        "../../node_modules/tslint-microsoft-contrib"
+    ]
+}

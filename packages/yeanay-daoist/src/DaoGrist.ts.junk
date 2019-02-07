@@ -1,0 +1,160 @@
+// This code was in Dao before it was ported to knex.  Some may be useful.
+
+
+        /*
+            // todo test
+            public async allKeySets(): Promise<Partial<DTO>[]> {
+                if (!this.businessKeyPropNames) throw new Error('allKeySets: no Business Keys')
+                const cols = [ ...this.businessKeyPropNames!, 'id']
+
+                return this.q().select(cols)
+            }
+        */
+
+/*
+    // todo test
+    // Returns the total number of users;
+    public async total(): Promise<number> {
+        const {count} = await this.q().count('*')
+        return count
+    }
+*/
+
+/*
+    public async upsertByBusinessKey(dto: Partial<DTO> & Object): Promise<number> {
+        // todo port to knex - consider http://blog.bguiz.com/2017/postgresql-upsert-knex/
+        // todo optimize the update case - don't update unchanged props,
+        // todo don't update at all if no change
+
+        if (!this.businessKeyPropNames) throw new Error('allKeySets: no Business Keys')
+
+        const insertSql = pgp.helpers.insert(dto, this.noIdColumnSet)
+
+        const sKeyNames = this.businessKeyPropNames.join(' ,')
+        const values = pgp.helpers.values(dto, this.noIdColumnSet)
+        const setSql = pgp.helpers.sets(dto, this.noIdColumnSet)
+        const q = `${insertSql} on conflict (${sKeyNames}) do update set ${setSql} returning id`
+        try {
+            return (await this.db.one(q)).id
+        } catch (e) {
+            console.log(q)
+            console.log(e)
+            throw(e)
+        }
+    }
+*/
+
+/*
+    // todo port to knex
+    // for tables with no primary key "id" field
+    public async upsertByBusinessKeyNoId(dto: Partial<DTO> & Object): Promise<void> {
+        // todo optimize the update case - don't update unchanged props,
+        // todo don't update at all if no change
+
+        try {
+            if (!this.businessKeyPropNames) throw new Error('allKeySets: no Business Keys')
+
+            const insertSql = pgp.helpers.insert(dto, this.noIdColumnSet)
+
+            const sKeyNames = this.businessKeyPropNames.join(' ,')
+            const values = pgp.helpers.values(dto, this.noIdColumnSet)
+            const setSql = pgp.helpers.sets(dto, this.noIdColumnSet)
+            const q = `${insertSql} on conflict (${sKeyNames}) do update set ${setSql}`
+            await this.db.none(q)
+        } catch (e) {
+            console.log(e)
+            throw(e)
+        }
+    }
+*/
+
+/*
+    // todo port to Knex
+
+    protected allKeySetsQueryNoId(t: TableName = this.tableName,
+                                  ...extraProps: (keyof DTO)[]): string {
+        if (!this.businessKeyPropNames) throw new Error('allKeySets: no Business Keys')
+
+        return `SELECT ${this.businessKeyPropNames.concat(extraProps).join(', ')} FROM ${t}`
+    }
+*/
+
+/*
+    // todo port to Knex
+
+    /!**
+     * Perform a query and perform a callback on each row.
+     * Uses cursor.
+     * @param query - if has values, must be $1, etc
+     * @param values
+     * @param options ?
+     * @param rowProc row processor
+     * @returns {Promise<XPromise<{processed: number, duration: number}>>}
+     *!/
+    protected queryStream<QDTO = DTO>(query: string,
+                                      values: any[],
+                                      options: QueryStream.Options,
+                                      rowProc: (rec: QDTO) => void,): Promise<QueryStreamResult> {
+
+        const promise = new Promise((resolve, reject) => {
+            try {
+                let qsr: QueryStreamResult
+                const qs = new QueryStream(query, values, options);
+                this.db.stream(qs, s => {
+                        s.on('data', rowProc)
+                        s.on('end', () => {
+                            console.log('queryStream end')
+                            resolve(qsr)
+                        })
+                    }
+                ).then(q => qsr = q)
+            }
+            catch (e) {
+                reject(e)
+            }
+        })
+        return promise
+    }
+*/
+
+/*
+    // todo port to Knex
+    protected asyncQueryStream<QDTO = DTO>(query: string,
+                                           values: any[],
+                                           options: QueryStream.Options,
+                                           rowProc: (rec: QDTO) => Promise<void>,): Promise<QueryStreamResult> {
+
+        const promise = new Promise((resolve, reject) => {
+            try {
+                let ended = false
+                let qsr: QueryStreamResult
+                const qs = new QueryStream(query, values, options);
+                this.db.stream(qs, s => {
+                        s.on('data', async (row: QDTO) => {
+                            s.pause()
+                            await rowProc(row)
+                            s.resume()
+                            if ( ended ) {
+                                resolve(qsr)
+                            }
+                        })
+                        s.on('end', () => {  // may occur during 'data' handling while in 'await'
+                            console.log('queryStream end')
+                            // true iff in 'data' handing in 'await', or todo empty stream
+                            if ( s.isPaused() ) {
+                                ended = true
+                            } else {
+                                resolve(qsr)
+                            }
+                        })
+                    }
+                ).then(q => qsr = q)
+            }
+            catch (e) {
+                reject(e)
+            }
+        })
+        return promise
+    }
+
+*/

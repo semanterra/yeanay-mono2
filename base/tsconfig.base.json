@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "lib": [
+            "ES2017", "es2017.object", "ES2016", "ES2015", "ES6", "esnext.asynciterable"
+        ],
+        "target": "ES2017",
+
+        "module": "commonjs",
+        "moduleResolution": "node",
+
+        "noImplicitAny": false,
+        "noImplicitThis": true,
+        "strictNullChecks" :true,
+        "noStrictGenericChecks": true,
+        "allowJs": false,
+        "experimentalDecorators": true,
+        "allowSyntheticDefaultImports": false,
+        "jsx": "react",
+        "declaration": true,
+        "inlineSourceMap": true
+    }
+}
+

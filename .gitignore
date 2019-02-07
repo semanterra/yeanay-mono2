@@ -1,0 +1,9 @@
+# Created by .ignore support plugin (hsz.mobi)
+.idea
+/packages/*/lib/
+/packages/*/coverage
+/packages/*/node_modules
+
+# These include api key and/or other secrets
+/packages/osv2-to-yeanay/config/local.json5
+/packages/osv2-to-yeanay/graphql.config.json

@@ -1,0 +1,11 @@
+{
+    "dbConnectionConfig": {
+        "connection": {
+            "user": "YN_DB_USER",
+            "password": "YN_DB_PASSWORD",
+            "debug": "YN_DB_DEBUG"
+        }
+    },
+    "osApiKey": "YN_OS_API_KEY",
+    "since": "YN_SINCE"
+}

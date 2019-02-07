@@ -1,0 +1,31 @@
+{
+  "name": "@yeanay/yeanay-commons",
+  "version": "0.1.7",
+  "repository": "semanterra/yeanay-commons",
+  "description": "yeanay code, config and docs shared across server and client",
+  "main": "lib/src/index.js",
+  "types": "lib/src/index.d.ts",
+  "scripts": {
+    "build": "npx tsc",
+    "clean": "rm -rf lib coverage",
+    "lint": "npx tslint --project . --format verbose",
+    "prepublishOnly": "npm run clean && npm run build && npm run lint && npm run test",
+    "test": "jest --coverage",
+    "debug-jest": "node --inspect-brk node_modules/.bin/jest --runInBand"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/.*\\.(test|spec))\\.(ts|tsx)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "json"
+    ]
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {}
+}

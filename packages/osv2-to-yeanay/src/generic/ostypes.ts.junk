@@ -1,0 +1,100 @@
+// OpenStates  datatypes shared amond multiple models
+
+import { KeySet } from '../db//log/logSchema'
+import { Maybe } from '../util/types'
+
+// Graphql
+export type GqlCursor = string
+
+// OCD ID types
+export type OCDId = string
+export type OCDJurisdictionId = OCDId
+export type OCDOrganizationId = OCDId
+export type OCDPostId = OCDId
+export type OCDDivisionId = OCDId
+
+export type OCDChamberId = 'upper' | 'lower' | 'legislature'
+export type OCDOrgClassification =
+    OCDChamberId |
+    'committee' |
+    'executive' |
+    'party' // never seen in jurisdiction, only on Person memberships
+
+export type OCDPersonId = OCDId
+export type OCDBillId = OCDId
+export type OCDVoteId = OCDId
+
+export type ISODate = string // 2018-10-25 exactly - no time, 10 chars
+
+export type StateId = string
+export type ChamberId = 'upper' | 'lower'
+
+export function chamberOfOrg(classification:string, stateId:StateId): Maybe<ChamberId> {
+    if ( classification === 'upper' || classification === 'lower')
+        return classification
+    if ( classification === 'legislature' && ['ne','dc'].includes(stateId))
+        return 'upper'
+    return undefined
+}
+
+export type SessionId = string
+export type TermId = string
+
+export type BillId = string // an OpenStates bill id, not a state-assigned ID
+export type BillName = string // State-level bill ID, e.g. HB 101
+export type BillSubject = string // http://docs.openstates.org/en/latest/policies/categorization.html#subject-categorization
+export type BillType = string // http://docs.openstates.org/en/latest/policies/categorization.html#bill-types
+export type BillActionType = string // http://docs.openstates.org/en/latest/policies/categorization.html#action-categorization
+export type DocId = string
+export type VoteId = string
+export type LegiId = string
+export type PartyId = string // todo consider restricting when current set is known
+
+export interface IDed {
+    id: PrimaryKey
+}
+
+
+/** small integer used to identify legislators within a state/chamber/term
+ or a district within a state.  Used for recording votes tersely
+ */
+export type Ordinal = number
+
+export type DemiParty = 'd' | 'r' | 'o'
+export type OfficeType = 'capitol' | 'district'
+export type CommitteeId = string
+
+export type VoteResult = 'pass' | 'fail'
+export type VoteOption = 'yes' | 'no' | 'other'
+export type DistrictId = string
+export type DistrictName = string // unique within state + chamber
+
+export type LongLatArr = [number, number]
+export type Geoid = string
+
+export type PrimaryKey = number
+export type RecordType =
+    'os_state'
+    | 'raw_bill'
+    | 'raw_district'
+    | 'raw_legi'
+    | 'raw_state'
+    | 'os_search_bill'
+    | 'os_detail_bill'
+    | 'os_search_district'
+    | 'os_state'
+    | 'os_search_leg'
+    | 'os_detail_leg'
+    | 'os_metaOverview'
+    | 'test'
+    | 'raw_gql_jurisdiction'
+    | 'raw_gql_organization'
+    | 'raw_gql_legislator'
+    | 'raw_gql_bill'
+
+export interface MetaRecord<T> {
+    describe(instance: T): KeySet // create string of record keys and other info id'ing the instance for humans
+    name: RecordType // singular
+    names: string //plurals
+}
+

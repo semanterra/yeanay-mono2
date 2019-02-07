@@ -1,0 +1,16 @@
+{
+    // knex config FOR UNIT TESTING ONLY.  See https://knexjs.org/#Installation-client.
+    knex: {
+        client: 'pg',
+        debug: true,
+        asyncStackTraces: true,
+        searchPath: ['yeanay_test'],
+        // used by Travis
+        connection: {
+            host : '127.0.0.1',
+            port: 5432,
+            user : 'postgres',
+            database : 'yeanay_test'
+        },
+    }
+}

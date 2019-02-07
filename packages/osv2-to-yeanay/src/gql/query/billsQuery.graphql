@@ -1,0 +1,51 @@
+query billQuery($stateName: String!, $since: String, $after: String) {
+    bills(first: 10, jurisdiction: $stateName, after: $after, updatedSince: $since) {
+        edges {
+            cursor
+            node {
+                id
+                identifier
+                title
+                classification
+                otherIdentifiers { identifier scheme note }
+                otherTitles { title note }
+                fromOrganization { classification identifiers { identifier scheme } name }
+                updatedAt
+                createdAt
+                legislativeSession { identifier }
+                subject
+                votes { edges { node {
+                            id
+                            updatedAt
+                            extras
+                            identifier
+                            motionText
+                            motionClassification
+                            startDate
+                            endDate
+                            result
+                            organization {
+                                id
+                                classification
+                                name
+                            }
+                            votes { option voter {id} voterName}
+                            counts { option value }
+                            sources { url note }
+                        } } }
+                actions {
+                    organization { id classification name }
+                    description
+                    date
+                    classification
+                    order
+                    vote { id }
+                }
+                documents { date note links { url } }
+                versions { date note links { url } }
+
+                sources { url note }
+            }
+        }
+    }
+}

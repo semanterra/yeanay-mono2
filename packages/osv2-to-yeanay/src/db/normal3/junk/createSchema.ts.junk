@@ -1,0 +1,234 @@
+import {connectKnex} from '../../db'
+import VError = require('verror')
+import { SchemaNameSet } from '../../Dao'
+
+
+async function addTimestamps(kschema, tableName) {
+    await kschema().alterTable(tableName, table => table.timestamps(true, true))
+    const triggerName = `${tableName}_updated_at`
+    await kschema().raw(`
+        CREATE TRIGGER ${triggerName}
+        BEFORE UPDATE ON ${kschema}.${tableName}
+        FOR EACH ROW EXECUTE PROCEDURE update_update_time()
+    `)
+}
+
+export async function createUserSchema(conn, schemas: SchemaNameSet) {
+    const schema = schemas.userSchema!
+    try {
+        const ks = connectKnex({connection: conn})
+        try {
+            await ks.raw(`DROP SCHEMA ${schema} CASCADE`)
+        } catch (e) {
+            // eat error, probably 'does not exist'
+        }
+        await ks.raw(`CREATE SCHEMA ${schema}`)
+        await ks.destroy()
+
+        const k = connectKnex({connection:conn, searchPath:schema})
+
+        const kschema = () => k.schema.withSchema(schema)
+        kschema.toString = () => schema
+
+        await kschema().raw(`
+        CREATE OR REPLACE FUNCTION update_update_time()
+          RETURNS TRIGGER AS $$
+        BEGIN
+          NEW.updated_at = current_timestamp;
+          RETURN NEW;
+        END;
+        $$ LANGUAGE 'plpgsql';
+    `)
+        await createUzer(kschema)
+        await createSession(kschema)
+        await createLegiList(kschema)
+        await createLegiListList(kschema)
+        await createIssueGrader(kschema)
+        await createGradeInstance(kschema)
+        await createReportCardDesign(kschema)
+        await createGraderUserAssoc(kschema)
+
+        await k.destroy()
+    } catch (e) {
+        console.log(e)
+        throw new VError(e, 'createUserSchema failed')
+    }
+}
+
+
+async function createUzer(kschema) {
+    const tableName = 'uzer'
+    await kschema().createTable(tableName, table => {
+        table.increments('id')
+        table.string('user_id').notNullable().unique()
+        table.string('password')
+        table.string('email')
+        table.string('photo')
+        table.string('full_name')
+        table.string('public_id').notNullable().unique()
+        table.string('provider_id').notNullable()
+        table.string('provider_user_id').notNullable()
+        table.unique(['provider_id', 'provider_user_id'])
+        table.jsonb('profile')
+    })
+    await addTimestamps(kschema, tableName)
+}
+
+async function createSession(kschema) {
+    const tableName = 'session'
+    await kschema().createTable(tableName, table => {
+        table.increments('id')
+        table.string('access_token', 2000).notNullable().unique()
+
+        table.string('user_id').notNullable()
+        table.integer('user_fk').notNullable().references('uzer.id').onDelete('cascade')
+        table.string('ip')
+
+    })
+    await addTimestamps(kschema, tableName)
+    await kschema().alterTable(tableName, table => table.index(['created_at']))
+
+    await kschema().raw(`
+        CREATE FUNCTION expire_session_delete_old_rows()
+          RETURNS TRIGGER
+        LANGUAGE plpgsql
+        AS $$
+        BEGIN
+          DELETE FROM ${kschema}.${tableName}
+          WHERE created_at < NOW() - INTERVAL '1 minute'; -- todo back off to a day!!!!
+          RETURN NEW;
+        END;
+        $$;
+    `)
+    await kschema().raw(`
+        CREATE TRIGGER expire_session_delete_old_rows_trigger
+        AFTER INSERT ON session
+        EXECUTE PROCEDURE expire_session_delete_old_rows();
+    `)
+
+}
+
+async function createLegiList(kschema) {
+    const tableName = 'legi_list'
+    await kschema().createTable(tableName, table => {
+        table.increments('id')
+        table.string('state_id').notNullable()
+        table.string('chamber_id').notNullable()
+        table.integer('user_fk').notNullable().references('uzer.id').onDelete('cascade')
+        table.string('name')
+        table.string('description', 2000)
+        table.unique(['user_fk', 'state_id', 'name'])
+    })
+    await addTimestamps(kschema, tableName)
+
+    const tableName2 = 'legi_list_entry'
+    await kschema().createTable(tableName2, table => {
+        table.increments('id')
+        table.string('legi_id').notNullable()
+        table.integer('legi_list_fk').notNullable().references('legi_list.id').onDelete('cascade')
+        table.index(['legi_id'])
+    })
+    await addTimestamps(kschema, tableName2)
+}
+
+async function createLegiListList(kschema) {
+    const tableName = 'legi_list_list'
+    await kschema().createTable(tableName, table => {
+        table.increments('id')
+        table.string('state_id').notNullable()
+        table.string('chamber_id').notNullable()
+        table.integer('user_fk').notNullable().references('uzer.id').onDelete('cascade')
+        table.string('role',20)
+        table.string('name')
+        table.string('description', 2000)
+        table.unique(['user_fk', 'state_id', 'name'])
+    })
+    await addTimestamps(kschema, tableName)
+
+    const tableName2 = 'legi_list_list_entry'
+    await kschema().createTable(tableName2, table => {
+        table.increments('id')
+        table.string('legi_id').notNullable()
+        table.integer('legi_list_fk').notNullable().references('legi_list.id').onDelete('cascade')
+    })
+    await addTimestamps(kschema, tableName2)
+}
+
+async function createIssueGrader(kschema) {
+    const tableName = 'issue_grader'
+    await kschema().createTable(tableName, table => {
+        table.increments('id')
+        table.string('state_id').notNullable()
+        table.string('chamber_id').notNullable()
+        table.integer('user_fk').notNullable().references('uzer.id').onDelete('cascade')
+        table.string('grader_name')
+        table.string('color')
+        table.string('image')
+        table.string('description', 2000)
+        table.boolean('is_public')
+        table.unique(['user_fk', 'state_id', 'chamber_id', 'grader_name'])
+    })
+    await addTimestamps(kschema, tableName)
+
+    const tableName2 = 'issue_grader_entry'
+    await kschema().createTable(tableName2, table => {
+        table.increments('id')
+        table.string('vote_id').notNullable()
+        table.string('bill_nickname')
+        table.string('motion_nickname')
+        table.integer('issue_grader_fk').notNullable().references('issue_grader.id').onDelete('cascade')
+        table.integer('vote_value').notNullable()
+        table.float('percent', 6,3).notNullable()
+        table.index(['vote_id'])
+    })
+    await addTimestamps(kschema, tableName2)
+}
+
+async function createGradeInstance(kschema) {
+    const tableName = 'grade_instance'
+    await kschema().createTable(tableName, table => {
+        table.increments('id')
+        table.string('legi_id').notNullable()
+        table.integer('issue_grader_fk').notNullable().references('issue_grader.id').onDelete('cascade')
+        table.float('percent').notNullable()
+        table.unique(['legi_id','issue_grader_fk'])
+    })
+}
+
+async function createReportCardDesign(kschema) {
+    const tableName = 'report_card_design'
+    await kschema().createTable(tableName, table => {
+        table.increments('id')
+        table.string('state_id').notNullable()
+        table.string('chamber_id').notNullable()
+        table.integer('user_fk').notNullable().references('uzer.id').onDelete('cascade')
+        table.string('role',20)
+        table.string('name')
+        table.string('description', 2000)
+        table.boolean('is_public')
+        table.unique(['user_fk', 'state_id', 'name'])
+    })
+    await addTimestamps(kschema, tableName)
+
+    const tableName2 = 'report_card_design_entry'
+    await kschema().createTable(tableName2, table => {
+        table.increments('id')
+        table.string('vote_id').notNullable()
+        table.integer('issue_grader_fk').notNullable().references('issue_grader.id').onDelete('cascade')
+        table.integer('pro_con').notNullable()
+        table.float('percent', 6, 3).notNullable()
+    })
+    await addTimestamps(kschema, tableName2)
+}
+
+async function createGraderUserAssoc(kschema) {
+    const tableName = 'grader_user_assoc'
+    await kschema().createTable(tableName, table => {
+        table.increments('id')
+        table.integer('user_fk').notNullable().references('uzer.id').onDelete('cascade')
+        table.integer('issue_grader_fk').notNullable().references('issue_grader.id').onDelete('cascade')
+        table.string('role').defaultTo('_favorite')// '_favorite'
+        table.unique(['user_fk', 'issue_grader_fk'])
+    })
+}
+

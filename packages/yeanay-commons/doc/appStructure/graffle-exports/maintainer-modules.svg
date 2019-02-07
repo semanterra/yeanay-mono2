@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xl="http://www.w3.org/1999/xlink" viewBox="244 205 1067 829" width="1067" height="829">
+  <defs>
+    <font-face font-family="Helvetica Neue" font-size="16" panose-1="2 0 5 3 0 0 0 2 0 4" units-per-em="1000" underline-position="-100" underline-thickness="50" slope="0" x-height="517" cap-height="714" ascent="951.9958" descent="-212.99744" font-weight="400">
+      <font-face-src>
+        <font-face-name name="HelveticaNeue"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -3 6 6" markerWidth="6" markerHeight="6" color="#a5a5a5">
+      <g>
+        <path d="M 3.7333333 0 L 0 -1.4 L 0 1.4 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledArrow_Marker_2" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -3 6 6" markerWidth="6" markerHeight="6" color="black">
+      <g>
+        <path d="M 3.7333333 0 L 0 -1.4 L 0 1.4 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <linearGradient x1="0" x2="1" id="Gradient" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fffd78"/>
+      <stop offset=".45238096" stop-color="#ffe979"/>
+      <stop offset="1" stop-color="#ffd579"/>
+    </linearGradient>
+    <linearGradient id="Obj_Gradient" xl:href="#Gradient" gradientTransform="translate(972.4571 592.33706) rotate(-108.6896) scale(40)"/>
+    <font-face font-family="Helvetica" font-size="12" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="522.9492" cap-height="717.28516" ascent="770.0195" descent="-229.98047" font-weight="400">
+      <font-face-src>
+        <font-face-name name="Helvetica"/>
+      </font-face-src>
+    </font-face>
+    <linearGradient id="Obj_Gradient_2" xl:href="#Gradient" gradientTransform="translate(594.6095 725.11975) rotate(-110.72842) scale(40)"/>
+    <linearGradient id="Obj_Gradient_3" xl:href="#Gradient" gradientTransform="translate(339.51393 808.2469) rotate(-105.84624) scale(40)"/>
+    <linearGradient id="Obj_Gradient_4" xl:href="#Gradient" gradientTransform="translate(1020.7436 911.5016) rotate(89.26548) scale(40)"/>
+  </defs>
+  <metadata> Produced by OmniGraffle 7.9.4 
+    <dc:date>2019-01-07 03:28:10 +0000</dc:date>
+  </metadata>
+  <g id="Canvas_2" fill="none" stroke-dasharray="none" stroke="none" stroke-opacity="1" fill-opacity="1">
+    <title>maintainermodules</title>
+    <g id="Canvas_2: Layer 1">
+      <title>Layer 1</title>
+      <g id="Graphic_56">
+        <rect x="955" y="759" width="235" height="203" fill="white"/>
+        <rect x="955" y="759" width="235" height="203" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_5">
+        <rect x="287.5" y="285" width="808.5" height="439" fill="#c0c0ff"/>
+        <rect x="287.5" y="285" width="808.5" height="439" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(292.5 290)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="0" y="15">maintainer</tspan>
+        </text>
+      </g>
+      <g id="Graphic_7">
+        <rect x="500" y="965" width="150" height="50" fill="#ffc0c0"/>
+        <rect x="500" y="965" width="150" height="50" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(505 980.776)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="54.736" y="15">psql</tspan>
+        </text>
+      </g>
+      <g id="Graphic_8">
+        <rect x="500" y="892" width="150" height="50" fill="#ffc0c0"/>
+        <rect x="500" y="892" width="150" height="50" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(505 907.776)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="52.96" y="15">knex</tspan>
+        </text>
+      </g>
+      <g id="Line_9">
+        <line x1="575" y1="942" x2="575" y2="949.1" marker-end="url(#FilledArrow_Marker)" stroke="#a5a5a5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="12.0,12.0" stroke-width="3"/>
+      </g>
+      <g id="Graphic_14">
+        <rect x="400" y="724" width="150" height="50" fill="#c0c0ff"/>
+        <rect x="400" y="724" width="150" height="50" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(405 739.776)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="39.632" y="15">legistore</tspan>
+        </text>
+      </g>
+      <g id="Line_15">
+        <line x1="493.31795" y1="521" x2="478.2819" y2="708.1511" marker-end="url(#FilledArrow_Marker_2)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="12.0,12.0" stroke-width="3"/>
+      </g>
+      <g id="Line_16">
+        <line x1="575" y1="872.5" x2="575" y2="876.1" marker-end="url(#FilledArrow_Marker)" stroke="#a5a5a5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="12.0,12.0" stroke-width="3"/>
+      </g>
+      <g id="Graphic_23">
+        <text transform="translate(292.5 228.776)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x=".444" y="15">Maintainer Major Modules</tspan>
+        </text>
+      </g>
+      <g id="Graphic_27">
+        <rect x="981" y="778" width="150" height="21" fill="#c0c0ff"/>
+        <rect x="981" y="778" width="150" height="21" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(986 779.276)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="10.736" y="15">internal package</tspan>
+        </text>
+      </g>
+      <g id="Graphic_28">
+        <rect x="981" y="807" width="150" height="21" fill="#ffc0c0"/>
+        <rect x="981" y="807" width="150" height="21" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(986 808.276)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="8.52" y="15">external package</tspan>
+        </text>
+      </g>
+      <g id="Graphic_29">
+        <rect x="634" y="595" width="155" height="129" fill="white"/>
+        <rect x="634" y="595" width="155" height="129" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(639 650.276)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="40.364" y="15">rawStore</tspan>
+        </text>
+      </g>
+      <g id="Graphic_31">
+        <rect x="421" y="392" width="155" height="129" fill="white"/>
+        <rect x="421" y="392" width="155" height="129" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(426 447.276)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="47.908" y="15">cooker</tspan>
+        </text>
+      </g>
+      <g id="Graphic_32">
+        <rect x="634" y="308" width="155" height="129" fill="white"/>
+        <rect x="634" y="308" width="155" height="129" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(639 363.276)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="57.092" y="15">chef</tspan>
+        </text>
+      </g>
+      <g id="Graphic_33">
+        <rect x="894" y="544" width="155" height="129" fill="white"/>
+        <rect x="894" y="544" width="155" height="129" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(899 599.276)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="16.052" y="15">abstractFetcher</tspan>
+        </text>
+      </g>
+      <g id="Graphic_34">
+        <rect x="894" y="369" width="155" height="129" fill="white"/>
+        <rect x="894" y="369" width="155" height="129" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(899 424.276)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="32.364" y="15">rawFetcher</tspan>
+        </text>
+      </g>
+      <g id="Graphic_35">
+        <rect x="1142" y="463.5" width="150" height="50" fill="#ffc0c0"/>
+        <rect x="1142" y="463.5" width="150" height="50" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(1147 479.276)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="42.736" y="15">graphql</tspan>
+        </text>
+      </g>
+      <g id="Line_36">
+        <line x1="1049" y1="450.8625" x2="1126.4846" y2="468.2216" marker-end="url(#FilledArrow_Marker)" stroke="#a5a5a5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="12.0,12.0" stroke-width="3"/>
+      </g>
+      <g id="Line_37">
+        <line x1="897.2965" y1="498" x2="797.7038" y2="584.56904" marker-end="url(#FilledArrow_Marker_2)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="12.0,12.0" stroke-width="3"/>
+      </g>
+      <g id="Line_39">
+        <line x1="971.5" y1="498" x2="971.5" y2="528.1" marker-end="url(#FilledArrow_Marker_2)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+      </g>
+      <g id="Line_41">
+        <line x1="634" y1="403.0634" x2="590.79134" y2="420.1034" marker-end="url(#FilledArrow_Marker_2)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="12.0,12.0" stroke-width="3"/>
+      </g>
+      <g id="Line_42">
+        <line x1="789" y1="390.6827" x2="878.5203" y2="411.68554" marker-end="url(#FilledArrow_Marker_2)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="12.0,12.0" stroke-width="3"/>
+      </g>
+      <g id="Graphic_43">
+        <rect x="1145" y="513.5" width="144" height="55.5" fill="white"/>
+        <rect x="1145" y="513.5" width="144" height="55.5" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(1150 522.802)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="22.392" y="15">Open States </tspan>
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="35.432" y="33.448">endpoint</tspan>
+        </text>
+      </g>
+      <g id="Line_44">
+        <line x1="566.17734" y1="521" x2="632.3127" y2="584.03044" marker-end="url(#FilledArrow_Marker_2)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="12.0,12.0" stroke-width="3"/>
+      </g>
+      <g id="Line_45">
+        <line x1="711.5" y1="437" x2="711.5" y2="579.1" marker-end="url(#FilledArrow_Marker_2)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="12.0,12.0" stroke-width="3"/>
+      </g>
+      <g id="Line_46">
+        <line x1="985" y1="857" x2="1044.1" y2="857" marker-end="url(#FilledArrow_Marker_2)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="12.0,12.0" stroke-width="3"/>
+      </g>
+      <g id="Line_48">
+        <line x1="985" y1="892" x2="1044.1" y2="892" marker-end="url(#FilledArrow_Marker_2)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+      </g>
+      <g id="Graphic_49">
+        <text transform="translate(1083 848.276)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x=".464" y="15">depends on</tspan>
+        </text>
+      </g>
+      <g id="Graphic_50">
+        <text transform="translate(1083 883.276)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x=".052" y="15">extends</tspan>
+        </text>
+      </g>
+      <g id="Graphic_51">
+        <path d="M 1139.4184 504.18753 L 1145.8273 523.1329 L 811.6234 636.187 L 814.8278 645.6597 L 789.4736 633.1232 L 802.0102 607.769 L 805.2146 617.24165 Z" fill="url(#Obj_Gradient)"/>
+        <path d="M 1139.4184 504.18753 L 1145.8273 523.1329 L 811.6234 636.187 L 814.8278 645.6597 L 789.4736 633.1232 L 802.0102 607.769 L 805.2146 617.24165 Z" stroke="#ef8e00" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(835.4922 607.6839) rotate(-17.689595)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="96.4563" y="11">1.  rawFetcher</tspan>
+        </text>
+      </g>
+      <g id="Graphic_52">
+        <path d="M 629.993 679.653 L 637.07176 698.3584 L 563.77385 726.0969 L 567.31324 735.4496 L 541.5291 723.823 L 553.1557 698.0389 L 556.6951 707.3916 Z" fill="url(#Obj_Gradient_2)"/>
+        <path d="M 629.993 679.653 L 637.07176 698.3584 L 563.77385 726.0969 L 567.31324 735.4496 L 541.5291 723.823 L 553.1557 698.0389 L 556.6951 707.3916 Z" stroke="#ef8e00" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(555.15046 710.5898) rotate(-19.728423)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="5.542435" y="11">2.  cooker</tspan>
+        </text>
+      </g>
+      <g id="Graphic_53">
+        <path d="M 396.78843 760.8048 L 402.24957 780.0448 L 290.55712 811.7479 L 293.2877 821.3679 L 268.5866 807.5891 L 282.3654 782.888 L 285.09598 792.508 Z" fill="url(#Obj_Gradient_3)"/>
+        <path d="M 396.78843 760.8048 L 402.24957 780.0448 L 290.55712 811.7479 L 293.2877 821.3679 L 268.5866 807.5891 L 282.3654 782.888 L 285.09598 792.508 Z" stroke="#ef8e00" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(287.7569 794.0371) rotate(-14.846244)" fill="black">
+          <tspan font-family="Helvetica" font-size="12" font-weight="400" fill="black" x="3.3507755" y="11">copied to server</tspan>
+        </text>
+      </g>
+      <g id="Graphic_54">
+        <path d="M 982.1282 941.9992 L 981.8718 922.0008 L 1039.8734 921.2572 L 1039.7453 911.258 L 1060 931 L 1040.258 951.2547 L 1040.1298 941.2556 Z" fill="url(#Obj_Gradient_4)"/>
+        <path d="M 982.1282 941.9992 L 981.8718 922.0008 L 1039.8734 921.2572 L 1039.7453 911.258 L 1060 931 L 1040.258 951.2547 L 1040.1298 941.2556 Z" stroke="#ef8e00" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_55">
+        <text transform="translate(1083 921.776)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x=".12" y="15">data flow</tspan>
+        </text>
+      </g>
+      <g id="Graphic_57">
+        <rect x="500" y="822.5" width="150" height="50" fill="#c0c0ff"/>
+        <rect x="500" y="822.5" width="150" height="50" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(505 838.276)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="48.072" y="15">daoist</tspan>
+        </text>
+      </g>
+      <g id="Line_58">
+        <line x1="664.6689" y1="724" x2="602.49335" y2="809.6337" marker-end="url(#FilledArrow_Marker_2)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="12.0,12.0" stroke-width="3"/>
+      </g>
+      <g id="Line_59">
+        <line x1="500.3807" y1="774" x2="538.29166" y2="811.3423" marker-end="url(#FilledArrow_Marker_2)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="12.0,12.0" stroke-width="3"/>
+      </g>
+    </g>
+  </g>
+</svg>

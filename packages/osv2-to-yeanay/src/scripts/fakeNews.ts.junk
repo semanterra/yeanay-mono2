@@ -1,0 +1,79 @@
+import { RawJurisdictionDao } from '../db/rawGql/rawJurisdictionDao'
+import { RawOrganizationDao } from '../db/rawGql/rawOrganizationDao'
+import { RawGqlJurisdiction } from '../db/rawGql/rawGqlTypes'
+import { makeTestLogger } from '../generic/log'
+import { stateIds } from '../generic/govStates'
+import { OCDOrganizationId, StateId } from '@yeanay/yeanay-commons'
+import { subDays } from 'date-fns'
+import { OpenStatesGqlApi } from '../osToRawGql/openStatesGqlApi'
+
+type Fakeness = boolean | null
+type Report = { [k: string]: { legis: Fakeness, bills: Fakeness } }
+
+
+const api = new OpenStatesGqlApi()
+const knex = makeKnex()
+const daoContext = makeDaoContext(knex)
+
+const sessionStart: Date = new Date('2018-01-01')
+const since: Date = subDays(new Date(), 5)
+
+/* This script looks for states where all legis' or bills' updated_at time is bumped
+on every scrape, or close to it.
+ */
+
+async function fakeNews() {
+    try {
+        const job_start = new Date()
+        const appName = 'fakeNews'
+        const logger = makeTestLogger([appName])
+
+        const config = { appName: 'fakeNews', knex, logger, job_start }
+
+        const accum: Report = {}
+
+        const jurisDao: RawJurisdictionDao = new RawJurisdictionDao(daoContext)
+        const orgsDao: RawOrganizationDao = new RawOrganizationDao(daoContext)
+
+        for ( let stateId of stateIds ) {
+            const chamberIds: OCDOrganizationId[] =
+                (await orgsDao.getChambersOfState(stateId)).map(c => c.id)
+            const juri: RawGqlJurisdiction = (await jurisDao.findByStateId(stateId))!
+            await checkState(stateId, juri.json.name!, chamberIds, accum)
+        }
+
+        process.exit(0)
+
+    }
+    catch ( e ) {
+        console.log('fakeNews failed:')
+        console.log(e)
+        process.exit(-1)
+    }
+}
+
+async function checkState(stateId: StateId, stateName: string, chamberIds: OCDOrganizationId[],
+                          accum: Report) {
+    let totalLegis = 0
+    let updatedLegis = 0
+    for ( const chamberId of chamberIds ) {
+        totalLegis += await api.countLegislatorsP(chamberId, sessionStart)
+        updatedLegis += await api.countLegislatorsP(chamberId, since)
+    }
+    const totalBills = await api.countBillsP(stateName, sessionStart)
+    const updatedBills = await api.countBillsP(stateName, since)
+
+    accum[stateId] = {
+        legis: isFake(totalLegis, updatedLegis),
+        bills: isFake(totalBills, updatedBills)
+    }
+    const i = 1
+}
+
+function isFake(total: number, updated: number): Fakeness {
+    if ( !total ) return null
+    return updated / total >= 0.9
+
+}
+
+fakeNews()

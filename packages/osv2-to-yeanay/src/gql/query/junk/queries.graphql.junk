@@ -1,0 +1,480 @@
+query stateQuery {
+    jurisdictions {
+        edges {
+            node {
+                id
+                name
+                url
+
+                legislativeSessions {
+                    edges {
+                        node {
+                            name
+                            startDate
+                            endDate
+                            classification
+                            identifier
+                        }
+                    }
+                }
+
+                #organizations omitted - they need to be paged
+            }
+        }
+    }
+}
+
+# e.g. "ocd-jurisdiction/country:us/state:ar/government", "YXJyYXljb25uZWN0aW9uOjQ="
+# Classification varies from state to state.
+# Each state has a root "legislature" organization with no parent.
+# In Nebraska and DC, this is also the (single) chamber
+# In other states, the classifications "upper" and "lower" designate chambers.
+# If constructing or parsing ocd_ids, note that dc is a "district:", not a "state:",
+# and I didn't check PR
+
+
+query organizationQuery($ocd_state_id: String!, $after: String) {
+    jurisdiction(id: $ocd_state_id) {
+        id
+        organizations( first: 100, after: $after) {
+            edges {
+                node {
+                    id
+                    name
+                    parent {id}
+                    classification
+                    image
+                    links {note url}
+                }
+                cursor
+            }
+        }
+    }
+}
+
+# This badly needs "last" to work, but it doesn't;
+# see https://github.com/openstates/new-openstates.org/issues/75
+# example:  $org_id: "ocd-organization/c95932a0-2ac1-4f14-a0c4-ade8568daac6"  (the Senate)
+
+query legiQuery( $ocd_org_id: String!) {
+    people(first: 3, memberOf: $ocd_org_id) {
+        edges {
+            node {
+                name
+                updatedAt
+                id
+                extras
+                sortName
+                familyName
+                givenName
+                image
+                identifiers {identifier}
+                otherNames {name note startDate endDate}
+                links { note url }
+
+                contactDetails {
+                    note
+                    type
+                    value
+                    label
+                }
+                otherNames {
+                    name
+                }
+                sources {
+                    note
+                    url
+                }
+                currentMemberships {
+                    organization { id name }
+                    updatedAt
+                    extras
+                    post {
+                        id
+                        updatedAt
+                        extras
+                        label
+                        role
+                        division {
+                            id
+                            updatedAt
+                            extras
+                            name
+                            redirect { id }
+                        }
+                        startDate
+                        endDate
+                    }
+                }
+            }
+            cursor
+        }
+    }
+
+}
+
+
+# example: { "state_name": "New York", "session": "2017-2018", "updatedSince": "2017-03-01" }
+
+query billsQuery( $state_name: String!, $session: String!, $after: String, $updatedSince: String) {
+    bills(first: 5,
+        jurisdiction: $state_name,
+        session: $session,
+        updatedSince: $updatedSince,
+        after:$after) {
+        edges {
+            cursor
+            node {
+                id
+                identifier
+                title
+                classification
+                updatedAt
+                votes {
+                    edges {
+                        node {
+                            id
+                            updatedAt
+                            extras
+                            identifier
+                            motionText
+                            motionClassification
+                            startDate
+                            endDate
+                            result
+                            organization {
+                                id
+                                classification
+                            }
+                        }
+                    }
+                }
+                actions {
+                    date
+                    description
+                    classification
+                    order
+                    extras
+                    relatedEntities {name entityType organization {id} person {id}}
+                }
+                documents {
+                    date
+                    note
+                    links {
+                        url
+                    }
+                }
+                versions {
+                    date
+                    note
+                    links {
+                        url
+                    }
+                }
+
+                sources {
+                    url
+                    note
+
+                }
+            }
+        }
+    }
+}
+
+# this is for checking if there are any votes
+
+query tinyBillsQuery( $state_name: String!, $session: String!, $after: String, $updatedSince: String) {
+    bills(first: 100,
+        jurisdiction: $state_name,
+        session: $session,
+        updatedSince: $updatedSince,
+        after:$after) {
+        edges {
+            node {
+                id
+                identifier
+                title
+                classification
+                updatedAt
+                votes(first:100) {edges {node {id}}}
+                actions {
+                    classification
+                    description
+                    vote { id }
+                }
+            }
+        }
+    }
+}
+
+
+# The following are grist from the doc website and should eventually be removed
+
+query get3People {
+    people(first: 3) {
+        edges {
+            node {
+                name
+                id
+            }
+            cursor
+        }
+    }
+}
+
+# http://docs.openstates.org/en/latest/api/v2/examples.html#get-basic-information-for-all-legislatures
+
+query basicAllStates {
+    jurisdictions {
+        edges {
+            node {
+                name
+                legislativeSessions {
+                    edges {
+                        node {
+                            name
+                        }
+                    }
+                }
+                legislature: organizations(classification: "legislature", first: 1) {
+                    edges {
+                        node {
+                            name
+                            classification
+                            children(first: 5) {
+                                edges {
+                                    node {
+                                        name
+                                        classification
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+# http://docs.openstates.org/en/latest/api/v2/examples.html#get-overview-of-a-legislature-s-structure
+
+query getStateStructure {
+    jurisdiction(name: "North Dakota") {
+        name
+        url
+        legislativeSessions {
+            edges {
+                node {
+                    name
+                    identifier
+                }
+            }
+        }
+        organizations(classification: "legislature", first: 1) {
+            edges {
+                node {
+                    id
+                    name
+                    children(first: 20) {
+                        edges {
+                            node {
+                                name
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+# http://docs.openstates.org/en/latest/api/v2/examples.html#search-for-bills-that-match-a-given-condition
+
+query billsMatchingCondition {
+    search_1: bills(first: 5, jurisdiction: "New York", session: "2017-2018", chamber: "lower", classification: "resolution", updatedSince: "2017-01-15") {
+        edges {
+            node {
+                id
+                identifier
+                title
+                classification
+                updatedAt
+                createdAt
+                legislativeSession {
+                    identifier
+                    jurisdiction {
+                        name
+                    }
+                }
+                actions {
+                    date
+                    description
+                    classification
+                }
+                documents {
+                    date
+                    note
+                    links {
+                        url
+                    }
+                }
+                versions {
+                    date
+                    note
+                    links {
+                        url
+                    }
+                }
+
+                sources {
+                    url
+                    note
+
+                }
+            }
+        }
+    }
+}
+
+# http://docs.openstates.org/en/latest/api/v2/examples.html#get-all-information-on-a-particular-bill
+
+query allInfoOnABill {
+    b1: bill(jurisdiction: "Hawaii", session: "2017 Regular Session", identifier: "HB 475") {
+        id
+        identifier
+        title
+        classification
+        updatedAt
+        createdAt
+        legislativeSession {
+            identifier
+            jurisdiction {
+                name
+            }
+        }
+        actions {
+            date
+            description
+            classification
+        }
+        documents {
+            date
+            note
+            links {
+                url
+            }
+        }
+        versions {
+            date
+            note
+            links {
+                url
+            }
+        }
+        sources {
+            url
+            note
+        }
+    }
+    b2: bill(id: "ocd-bill/9c24aaa2-6acc-43ad-883b-ae9f677062e9") {
+        id
+        identifier
+        title
+        classification
+        updatedAt
+        createdAt
+        legislativeSession {
+            identifier
+            jurisdiction {
+                name
+            }
+        }
+        actions {
+            date
+            description
+            classification
+        }
+        documents {
+            date
+            note
+            links {
+                url
+            }
+        }
+        versions {
+            date
+            note
+            links {
+                url
+            }
+        }
+        sources {
+            url
+            note
+        }
+    }
+}
+
+# http://docs.openstates.org/en/latest/api/v2/examples.html#get-information-about-a-specific-legislator
+
+query infoAboutALegi {
+    person(id:"ocd-person/dd05bd23-fe49-4e65-bfff-62db997e56e0"){
+        name
+        contactDetails {
+            note
+            type
+            value
+        }
+        otherNames {
+            name
+        }
+        sources {
+            url
+        }
+        currentMemberships {
+            organization {
+                name
+            }
+        }
+    }
+}
+
+# http://docs.openstates.org/en/latest/api/v2/examples.html#get-legislators-for-a-given-state-chamber
+
+query legisInChamber {
+    people(memberOf:"ocd-organization/ddf820b5-5246-46b3-a807-99b5914ad39f", first: 100) {
+        edges {
+            node {
+                name
+                party: currentMemberships(classification:"party") {
+                    organization {
+                        name
+
+                    }
+                }
+                links {
+                    url
+                }
+                sources {
+                    url
+                }
+                chamber: currentMemberships(classification:["upper", "lower"]) {
+                    post {
+                        label
+                    }
+                    organization {
+                        name
+                        classification
+                        parent {
+                            name
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
