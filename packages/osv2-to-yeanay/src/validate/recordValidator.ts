@@ -15,7 +15,7 @@ export class RecordValidator<T> {
 
     private readonly errorSink: IErrorSink2
     private _stateId: StateId
-    private metaRecord: MetaRecord<T>
+    private readonly metaRecord: MetaRecord<T>
     private _severity: VSeverity
     private targ?: T
 

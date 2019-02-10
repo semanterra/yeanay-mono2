@@ -15,12 +15,23 @@ async function update(): Promise0 {
         const config: Config = getConfig()
         const processorConfig: ProcessorConfig = makeProcessorConfig(config)
 
+        let start = 'aa'
+        let end = 'zz'
         const state = args['state']
+
         if ( state ) {
-            await endToEndState(state, processorConfig)
-        } else {
-            for ( let aState of stateIds ) {
-                await endToEndState(aState, processorConfig)
+            const splits = state.split('-')
+            start = splits[0]
+            if ( splits.length > 1 ) {
+                end = splits[1]
+            }
+        }
+        const force = !!args['force']
+        const nobills = !!args['nobills']
+        for ( let aState of stateIds ) {
+            // todo temp hack skip already done
+            if ( aState >= start && aState <= end ) {
+                await endToEndState(aState, processorConfig, force, nobills)
             }
         }
         process.exit(0)

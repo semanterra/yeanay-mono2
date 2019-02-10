@@ -287,6 +287,12 @@ export class N3LegisProc extends NProc {
             const division_id: OCDDivisionId = chamberMem.post!.division!.id
             const district: N3District = await this.n3DistrictDao.findByDivisionId(division_id)
 
+            if ( !district ) {
+                this.valor.verify(()=>'missing district ' + division_id)
+                console.log('missing district for division ' + division_id)
+                continue
+            }
+
             const chamber_id = chamberOfOrg(chamberMem.organization.classification as OCDChamberId, this.state_id)
             // all but legi_fk, id, and timestamps
             const memberRole: Partial<N3MemberRole> = {

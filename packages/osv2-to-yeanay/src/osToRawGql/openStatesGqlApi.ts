@@ -220,7 +220,8 @@ export class OpenStatesGqlApi {
             let cursor: string | undefined = undefined
             const billGen = nodesOfCursoredEdges<BillQFields>(response.bills, (c) => cursor = c)
             for ( const bill of billGen ) {
-                await (ticker(), consumer(bill))
+                ticker()
+                await consumer(bill)
             }
             if ( cursor ) {
                 await this.getBillsGenImpl(stateName, consumer, ticker, since, cursor)
