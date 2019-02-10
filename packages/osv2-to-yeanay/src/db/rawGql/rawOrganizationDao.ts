@@ -19,7 +19,7 @@ export class RawOrganizationDao extends Dao<RawGqlOrganization, OCDOrganizationI
 
     public async getChambersOfState(state_id: StateId): Promise<RawGqlOrganization[]> {
         const classifications: OCDOrgClassification[] =
-            ['ne', 'dc'].includes('state_id') ? ['legislature'] : ['upper', 'lower']
+            ['ne', 'dc'].includes(state_id) ? ['legislature'] : ['upper', 'lower']
 
         const rows = await this.q().select().where({ state_id }).whereIn('classification',
             classifications)

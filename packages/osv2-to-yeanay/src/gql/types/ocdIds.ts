@@ -14,6 +14,5 @@ export function parseJurisdictionId(id: OCDJurisdictionId): StateId {
 
 export function makeJurisdictionId(id: StateId): OCDJurisdictionId {
     const typ = id === 'pr' ? 'territory' : id === 'dc' ? 'district' : 'state'
-    const typ2 = id === 'il' ? 'legislature' : 'government'
-    return `ocd-jurisdiction/country:us/${typ}:${id}/${typ2}`
+    return `ocd-jurisdiction/country:us/${typ}:${id}/government`
 }

@@ -1,6 +1,6 @@
 import { OCDDivisionId, Promise0, StateId } from '@yeanay/yeanay-commons'
 import { DbConnection, SchemaName } from '@yeanay/yeanay-daoist'
-import { ValErrorDao } from '../db/log/logDao'
+import { ValErrorDao } from '../db/quality/logDao'
 import { RawBillDao } from '../db/rawGql/rawBillDao'
 import { RawDistrictDao } from '../db/rawGql/rawDistrictDao'
 import {
@@ -97,7 +97,8 @@ export interface OsToRawStateConfig extends NProcConfig {
     since: Date
 }
 
-export async function osToRawState(stateId: StateId, config: OsToRawStateConfig): Promise0 {
+export async function osToRawState(stateId: StateId, config: OsToRawStateConfig,
+                                   force: boolean, nobills: boolean): Promise0 {
 
     const { apiKey, rawSchemaName, conn, n3SchemaName, logger, loggerSchemaName, job_start, since } = config
 
@@ -120,7 +121,9 @@ export async function osToRawState(stateId: StateId, config: OsToRawStateConfig)
     }
 
     const jurisdictionProc = memoJurisProc || (memoJurisProc = new JurisdictionProc(rawProcConfig))
-    const { latest_update } = await rawStore.getLatestStateUpdates(stateId)
+    const { latest_update } = force
+        ? { latest_update: new Date(0) }
+        : await rawStore.getLatestStateUpdates(stateId)
     const juri = await jurisdictionProc.processState(stateId)
 
     const organizationProc = new OrganizationProc(rawProcConfig)
@@ -130,10 +133,13 @@ export async function osToRawState(stateId: StateId, config: OsToRawStateConfig)
     await districtProc.processState(stateId)
 
     const legislatorProc = new LegislatorProc(rawProcConfig)
-    await legislatorProc.processState(stateId, latest_update>since?latest_update:since)
+    await legislatorProc.processState(stateId, latest_update > since ? latest_update : since)
 
-    const billProc = new BillProc(rawProcConfig)
-    await billProc.processState(stateId, juri.name!, latest_update>since?latest_update:since)
+    if ( !nobills ) {
+        const billProc = new BillProc(rawProcConfig)
+        await billProc.processState(stateId, juri.name!,
+            latest_update > since ? latest_update : since)
+    }
 
     await rawStore.setLatestStateUpdate(stateId, job_start)
 }

@@ -1,29 +1,27 @@
-import * as _ from 'lodash'
-import { RawGqlDistrict, RawOpenStatesBoundary } from '../db/rawGql/rawGqlTypes'
-import { MultiMap } from '../generic/multimap'
 import * as osty from '@yeanay/yeanay-commons'
 import { ChamberId, OCDDivisionId, StateId } from '@yeanay/yeanay-commons'
-import { DistrictsQuery, LegiDivisionQFields } from '../gql/types/gql-types'
+import { subWeeks } from 'date-fns'
+import { RawGqlDistrict, RawOpenStatesBoundary } from '../db/rawGql/rawGqlTypes'
+import { DistrictsQuery, PostQFields } from '../gql/types/gql-types'
 import { makeJurisdictionId } from '../gql/types/ocdIds'
 import { RecordValidator } from '../validate/recordValidator'
 import * as val from '../validate/validate'
 import { OpenStatesBoundaryApi } from './openStatesBoundaryApi'
 
 import { RawProc, RawProcConfig } from './rawProc'
-import { subWeeks } from 'date-fns'
 
-const metaRecord: osty.MetaRecord<MergedRawDistrict> = {
-    describe: (instance: MergedRawDistrict) => _.pick(instance, ['district_id']),
-    name    : 'os_search_district', names: 'os search district',
+const metaRecord: osty.MetaRecord<PostQFields> = {
+    describe: (instance: PostQFields) => ({ division_id: instance.division.id }),
+    name    : 'os_district', names: 'os_districts',
 }
 
-type MergedRawDistrict = LegiDivisionQFields & {num_seats: number}
+type MergedRawDistrict = PostQFields & { num_seats: number }
 
 export class DistrictProc extends RawProc {
 
     private boundaryApi: OpenStatesBoundaryApi
 
-    private searchValor: RecordValidator<MergedRawDistrict> = new RecordValidator(
+    private searchValor: RecordValidator<PostQFields> = new RecordValidator(
         {
             errorSink: this.errorSink,
             metaRecord,
@@ -55,34 +53,32 @@ export class DistrictProc extends RawProc {
 
             const chamberId: ChamberId = districtChamber.node.classification
 
-            const divisions = districtChamber.node.currentMemberships.map((m) => m.post.division)
+            const memberships = districtChamber.node.currentMemberships
 
-            // backlog temp hack to fake number of seats as number of found legislators in district
-            const multiMap = new MultiMap<OCDDivisionId, LegiDivisionQFields>((d)=>d.id)
-            divisions.forEach((d)=>multiMap.put(d))
-
-            const uniqueDivisions: Iterable<MergedRawDistrict> =
-                multiMap.mapBuckets<MergedRawDistrict>((arr:LegiDivisionQFields[])=> {
-                const merged: MergedRawDistrict = {...arr[0], num_seats: arr.length}
-                return merged
-            })
 
             // const uniqueDivisions: LegiDivisionQFields[] = _.uniqBy<LegiDivisionQFields>(divisions,
             //     'id')
-            for ( let division of uniqueDivisions ) {
-                nStateDivisions +=1
-                if ( this.prevalidate(division) < val.VSeverity.Record ) {
+            for ( let membership of memberships ) {
+                const post = membership.post
+                const division = post.division
+                nStateDivisions += 1
+                if ( this.prevalidate(post) < val.VSeverity.Record ) {
                     try {
-                        // backlog get boundary only if there is none already or it hasn't been
-                        //  updated in say, a month.  Store date in boundary json?
-                        //  If old one is found that isn't too stale, re-store it in new record.
-                        const boundary: RawOpenStatesBoundary = updatingBoundaries
-                            ? (await this.boundaryApi.getBoundaryP(division.id)).data
-                            : (await this.rawStore.findDistrict(division.id))!.json.boundary
 
-                        const dbAttrs = this.transform(division, id, chamberId, boundary)
+                        let boundary: RawOpenStatesBoundary | null = null
+                        if ( updatingBoundaries ) {
+                            boundary = await this.fetchBoundary(division.id)
+                        } else {
+                            const oldDistrict = await this.rawStore.findDistrict(division.id)
+                            if ( oldDistrict ) {
+                                boundary = oldDistrict.json.boundary
+                            } else {
+                                boundary = await this.fetchBoundary(division.id)
+                            }
+                        }
+
+                        const dbAttrs = this.transform(post, id, chamberId, boundary)
                         await this.rawStore.upsertDistrict(dbAttrs)
-
 
                     } catch ( e ) {
                         this.logger.error(e)
@@ -100,23 +96,33 @@ export class DistrictProc extends RawProc {
     }
 
 
-    // noinspection JSMethodCanBeStatic
-    private transform(division: MergedRawDistrict, state_id: StateId, chamber_id: ChamberId,
-                      boundary: RawOpenStatesBoundary): RawGqlDistrict {
+    private async fetchBoundary(divisionId: OCDDivisionId): Promise<RawOpenStatesBoundary | null> {
+        let boundary: RawOpenStatesBoundary | null = null
+        try {
+            boundary = (await this.boundaryApi.getBoundaryP(divisionId)).data
+        } catch ( e ) {
+            this.searchValor.verify(() => 'no boundary available for ' + divisionId)
+        }
+        return boundary
+    }
+
+// noinspection JSMethodCanBeStatic
+    private transform(post: PostQFields, state_id: StateId, chamber_id: ChamberId,
+                      boundary: RawOpenStatesBoundary | null): RawGqlDistrict {
 
 
         const district: RawGqlDistrict = {
             state_id,
             chamber_id,
-            id: division.id,
-            json       : { ...division, boundary },
+            id  : post.division.id,
+            json: { ...post, boundary },
         }
         return district
     }
 
-    private prevalidate(data: MergedRawDistrict): val.VSeverity {
+    private prevalidate(data: PostQFields): val.VSeverity {
         this.searchValor.target(data)
-            .verifyProps('name', 'id')
+            .verifySubprops(data.division, 'division', 'id')
         return this.searchValor.targetSeverity
     }
 

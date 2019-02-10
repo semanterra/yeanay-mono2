@@ -95,6 +95,7 @@ export interface PostQFields {
     label: string
     role: string
     division: LegiDivisionQFields
+    maximumMemberships: number
 }
 
 export interface LegiDivisionQFields {
@@ -211,20 +212,15 @@ export interface DistrictRestFields {
 export interface DistrictsQuery {
     jurisdiction: {
         organizations: {
-            edges: [
-                {
-                    node: {
-                        classification: ChamberId
-                        currentMemberships: [
-                            {
-                                post: {
-                                    division: LegiDivisionQFields
-                                }
-                            }
-                            ]
-                    }
+            edges: [{
+                node: {
+                    classification: ChamberId
+                    currentMemberships: [
+                        {
+                            post: PostQFields
+                        }]
                 }
-            ]
+            }]
         }
     }
 }

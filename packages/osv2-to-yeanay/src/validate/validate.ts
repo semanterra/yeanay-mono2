@@ -3,8 +3,8 @@ import {Logger} from 'winston'
 import VError = require('verror')
 import {MetaRecord, StateId, KeySet, WithoutId, PrimaryKey} from '@yeanay/yeanay-commons'
 import {inspect} from 'util'
-import {ValErrorDao} from '../db/log/logDao'
-import { ValErrorLogEntry } from '../db/log/logSchema'
+import {ValErrorDao} from '../db/quality/logDao'
+import { ValErrorLogEntry } from '../db/quality/logSchema'
 
 export enum VSeverity { // in increasing order of severity
     None = 0,

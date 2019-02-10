@@ -11,9 +11,9 @@ import {
 import {
     BillQFields,
     JurisdictionQFields,
-    LegiDivisionQFields,
     LegislatorQFields,
     OrganizationQFields,
+    PostQFields,
 } from '../../gql/types/gql-types'
 
 export interface RawGqlJurisdiction {
@@ -62,6 +62,6 @@ export interface RawGqlDistrict {
     state_id: StateId
     chamber_id: 'upper' | 'lower' | 'legislature'
     id: OCDDivisionId
-    json: LegiDivisionQFields & { boundary: RawOpenStatesBoundary, num_seats: number}
+    json: PostQFields & { boundary: RawOpenStatesBoundary | null}
 }
 

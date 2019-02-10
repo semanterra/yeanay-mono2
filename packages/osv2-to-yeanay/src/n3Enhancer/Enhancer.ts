@@ -1,6 +1,6 @@
 import { DbConnection, SchemaName } from '@yeanay/yeanay-daoist'
 import { Logger } from 'winston'
-import { ValErrorDao } from '../db/log/logDao'
+import { ValErrorDao } from '../db/quality/logDao'
 
 import {
     N3BillDao,

@@ -113,15 +113,16 @@ export class N3DistrictProc extends NProc {
     private async transformAndReplace(rawDistrict: RawGqlDistrict,
                                       state: N3StateGov): Promise<PrimaryKey> {
         // add plain fields
-        const extent = rawDistrict.json.boundary.extent
-        const bbox: LongLatArr[] = [[extent[0], extent[1]], [extent[2], extent[3]]]
+        const b = rawDistrict.json.boundary
+        const extent = b ? b.extent : undefined
+        const bbox: LongLatArr[] | undefined = extent ? [[extent[0], extent[1]], [extent[2], extent[3]]] : undefined
         const nDistrict: Partial<N3District> = {
             state_fk     : state.id,
             chamber_id   : chamberOfOrg(rawDistrict.chamber_id, state.state_id),
             division_id  : rawDistrict.id,
-            district_name: rawDistrict.json.name,
-            bbox: {_:bbox}, // wrapped to avoid Knex problem
-            num_seats: rawDistrict.json.num_seats,
+            district_name: rawDistrict.json.label,
+            bbox: b ? {_:bbox!}: null, // wrapped to avoid Knex problem
+            num_seats: rawDistrict.json.maximumMemberships,
         }
 //        const jsoned = { ...nDistrict, bbox: JSON.stringify(nDistrict.bbox)}
         const pkDistrict = (await this.n3DistrictDao.upsertByBusinessKey(nDistrict)).id
@@ -134,9 +135,11 @@ export class N3DistrictProc extends NProc {
         this.valor.target(rawDistrict)
             .verifyProps(
                 'chamber_id',
-                'id'
+                'id')
+            .verifySubprops(rawDistrict.json, 'post',
+                'maximumMemberships', 'label'
             )
-            .verifySubprops(rawDistrict.json, 'json',
+            .verifySubprops(rawDistrict.json.division, 'division',
                 'name'
             )
 

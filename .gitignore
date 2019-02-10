@@ -7,3 +7,6 @@
 # These include api key and/or other secrets
 /packages/osv2-to-yeanay/config/local.json5
 /packages/osv2-to-yeanay/graphql.config.json
+
+node_modules
+.DS_Store
