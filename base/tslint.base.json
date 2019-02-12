@@ -93,7 +93,7 @@
         "new-parens": true,
         "no-construct": true,
         "no-default-export": false,
-        "no-empty-interface": true,
+        "no-empty-interface": false, //true,
         "no-for-in": true,
         "no-function-expression": false,
         "no-inferrable-types": false,
@@ -167,7 +167,7 @@
         "typedef-whitespace": [
             true, {
                 // forces a space before the colon in a type specifier
-                "call-signature": "nospace",
+                // "call-signature": "nospace",
                 "index-signature": "nospace",
                 "parameter": "nospace",
                 "property-declaration": "nospace",

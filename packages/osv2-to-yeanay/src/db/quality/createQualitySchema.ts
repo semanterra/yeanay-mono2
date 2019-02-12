@@ -75,8 +75,8 @@ async function createStaticGovState(fSchemaBuilder: FSchemaBuilder,
     const tableName = 'static_gov_state'
     await fSchemaBuilder().createTable(tableName, (table: TableBuilder) => {
         table.increments('id')
-        table.string('state_oid')
-        table.string('state_id') // 'nh'
+        table.string('oid')
+        table.string('name') // 'nh'
     })
     return
 }
@@ -86,8 +86,8 @@ async function createStaticChamber(fSchemaBuilder: FSchemaBuilder,
     const tableName = 'static_chamber'
     await fSchemaBuilder().createTable(tableName, (table: TableBuilder) => {
         table.increments('id')
-        table.string('chamber_id') // upper/lower
-        table.string('chamber_org_oid').notNullable().unique()
+        table.string('name') // upper/lower
+        table.string('oid').notNullable().unique()
         table.integer('static_gov_state_fk').notNullable()
             .references('static_gov_state.id').onDelete('cascade')
     })
@@ -101,8 +101,8 @@ async function createStaticBill(fSchemaBuilder: FSchemaBuilder,
         table.increments('id')
         table.integer('static_gov_state_fk').notNullable()
             .references('static_gov_state.id').onDelete('cascade')
-        table.string('bill_oid').notNullable().unique()
-        table.string('identifier')
+        table.string('oid').notNullable().unique()
+        table.string('name') // identifier
     })
     return
 }
@@ -116,7 +116,7 @@ async function createStaticVote(fSchemaBuilder: FSchemaBuilder,
             .references('static_bill.id').onDelete('cascade')
         table.integer('static_chamber_fk').notNullable()
             .references('static_chamber.id').onDelete('cascade')
-        table.string('vote_oid').notNullable().unique()
+        table.string('oid').notNullable().unique()
     })
     return
 }
@@ -128,7 +128,8 @@ async function createStaticLegi(fSchemaBuilder: FSchemaBuilder,
         table.increments('id')
         table.integer('static_gov_state_fk').notNullable()
             .references('static_gov_state.id').onDelete('cascade')
-        table.string('legi_person_oid').notNullable().unique()
+        table.string('oid').notNullable().unique()
+        table.string('name')
     })
     return
 }
@@ -138,7 +139,8 @@ async function createStaticPosting(fSchemaBuilder: FSchemaBuilder,
     const tableName = 'static_posting'
     await fSchemaBuilder().createTable(tableName, (table: TableBuilder) => {
         table.increments('id')
-        table.string('person_role_oid').notNullable().unique()
+        table.string('oid').notNullable().unique()
+        table.string('name')
         table.integer('static_chamber_fk').notNullable()
             .references('static_chamber.id').onDelete('cascade')
         table.integer('static_legi_fk').notNullable()
@@ -146,6 +148,7 @@ async function createStaticPosting(fSchemaBuilder: FSchemaBuilder,
     })
     return
 }
+
 
 
 type SnapEntityName = 'govState' | 'chamber' | 'bill' | 'vote' | 'legi' | 'posting'

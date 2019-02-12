@@ -232,6 +232,7 @@ export type DemiParty = 'd' | 'r' | 'o'
 export type OfficeType =  'capitol' | 'district'
 export type CommitteeId = string
 
+export type OCDMembershipId = string
 export type OCDPostId = string
 export type Ordinal = number
 
