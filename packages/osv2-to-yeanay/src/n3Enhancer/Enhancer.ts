@@ -12,6 +12,7 @@ import {
     N3StateSessionDao,
     N3VoteDao,
 } from '../db/normal3/normal3Daos'
+import { QContext } from '../db/quality/qcontext'
 
 import * as val from '../validate/validate'
 import { LogEntryContext } from '../validate/validate'
@@ -47,7 +48,7 @@ export class Enhancer {
     protected readonly n3LegiDao: N3LegiDao
     protected readonly n3MemberRoleDao: N3MemberRoleDao
 
-    constructor(enhancerConfig: EnhancerConfig, stage: string) {
+    constructor(enhancerConfig: EnhancerConfig, stage: string, qContext: QContext) {
         const { conn, n3SchemaName, logger, loggerSchemaName, job_start } = enhancerConfig
         this.logger = logger
         this.logEntryContext = {app: Enhancer.appName, job_start, stage}

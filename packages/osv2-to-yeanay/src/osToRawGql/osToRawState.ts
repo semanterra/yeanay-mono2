@@ -103,7 +103,7 @@ export async function osToRawState(stateId: StateId, config: OsToRawStateConfig,
     const { apiKey, rawSchemaName, conn, n3SchemaName, logger, loggerSchemaName, job_start, since } = config
 
     // todo make input param to remove knex reference
-    const rawStore = new RawStore(config.conn, config.rawSchemaName)
+    const rawStore = new RawStore(conn, rawSchemaName)
 
     const valErrorDao = new ValErrorDao(conn, loggerSchemaName)
 
@@ -119,6 +119,7 @@ export async function osToRawState(stateId: StateId, config: OsToRawStateConfig,
         job_start,
         since,
     }
+
 
     const jurisdictionProc = memoJurisProc || (memoJurisProc = new JurisdictionProc(rawProcConfig))
     const { latest_update } = force
@@ -142,4 +143,5 @@ export async function osToRawState(stateId: StateId, config: OsToRawStateConfig,
     }
 
     await rawStore.setLatestStateUpdate(stateId, job_start)
+
 }

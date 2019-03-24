@@ -71,7 +71,7 @@ export abstract class Dao<DTO, PK = PrimaryKey> {
         return this.columnSet.filter((c) => cnames.includes(c))
     }
 
-    public async insert(dto: WithoutId<DTO, PK>): Promise<PK> {
+    public async insert(dto: WithoutId<DTO, number>): Promise<PK> {
         const ids = await this.q().insert(dto).returning('id')
         return ids[0]
     }
@@ -98,10 +98,23 @@ export abstract class Dao<DTO, PK = PrimaryKey> {
         return this.q().where({ id }).delete()
     }
 
+    public async first(data:Partial<DTO>): Promise<DTO & IDed<PK> | null> {
+        const row = await this.q().first().where(data)
+        return row
+    }
+    public async only(data:Partial<DTO>): Promise<DTO & IDed<PK> | null> {
+        const rows = await this.q().select().where(data)
+        switch (rows.length) {
+            case 0: return null
+            case 1: return rows[0]
+            default: throw new Error(`Dao: only returned multiple records`)
+        }
+    }
+
     /** find by primary key, return null if nonexistent */
     public async findByPrimaryKey(id: PK): Promise<DTO & IDed<PK> | null> {
-        const rows = await this.q().select().where({ id })
-        return rows[0] || null
+        const row = await this.q().first().where({ id })
+        return row
     }
 
     public async update(id: PK, data: Partial<DTO>): Promise<void> {

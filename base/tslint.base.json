@@ -86,9 +86,12 @@
         "max-classes-per-file": false, // we generally recommend making one public class per file
         "max-file-line-count": [true, 500],
         "max-func-body-length": [true, 100, {"ignore-parameters-to-function-regex": "describe"}],
-        "max-line-length": [true, 140],
+        "max-line-length": [true, 100],
         "member-access": true,
-        "member-ordering": [true, {"order": "fields-first"}],
+
+        // prefer to keep related methods close to each other regardless of access level
+        // "member-ordering": [true, {"order": "fields-first"}],
+
         "missing-jsdoc": false,
         "new-parens": true,
         "no-construct": true,

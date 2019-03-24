@@ -6,6 +6,7 @@ import {
     PartyVoteCounts,
     VoteCountSet,
 } from '../db/normal3/normal3Schema'
+import { QContext } from '../db/quality/qcontext'
 import { Enhancer, EnhancerConfig } from './Enhancer'
 
 const emptyVoteSet: VoteCountSet = {[VoteValue.YES]: 0, [VoteValue.NO]: 0, [VoteValue.OTHER]: 0}
@@ -59,8 +60,8 @@ export class VoteEnhancer extends Enhancer {
     private stateVoteDateRange?: VoteDateRange
     private sessionVoteRanges:Map<PrimaryKey, VoteDateRange> = new Map<PrimaryKey, VoteDateRange>()
 
-    constructor(enhancerConfig:EnhancerConfig) {
-        super(enhancerConfig, 'vote')
+    constructor(enhancerConfig:EnhancerConfig, qContext:QContext) {
+        super(enhancerConfig, 'vote', qContext)
     }
 
     public async processAll(): Promise<number> {
